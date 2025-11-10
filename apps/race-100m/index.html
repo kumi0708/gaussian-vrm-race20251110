@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <title>GVRM 100m Race</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color: #fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Noto Sans JP', sans-serif; }
+    #ui { position: absolute; inset: 0; pointer-events: none; }
+    .topbar { position: absolute; top: 8px; left: 8px; right: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .btn { pointer-events: auto; background: #16a34a; color: #fff; border: 0; padding: 10px 14px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+    .btn.secondary { background: #334155; }
+    .btn.warn { background:#eab308; color:#111; }
+    .overlay-center { position: absolute; inset: 0; display: grid; place-items: center; font-size: clamp(24px, 8vw, 72px); font-weight: 800; text-shadow: 0 6px 30px rgba(0,0,0,.6); }
+    .countdown { opacity: 0; transition: opacity .18s ease; }
+    .visible { opacity: 1; }
+    .hud { position: absolute; bottom: 8px; left: 8px; right: 8px; display: flex; justify-content: space-between; gap: 8px; pointer-events: none; }
+    .panel { background: rgba(15,23,42,.6); border: 1px solid rgba(255,255,255,.15); border-radius: 12px; padding: 8px 12px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+    .scoreboard { display: flex; gap: 10px; flex-wrap: wrap; }
+    .chip { background: rgba(2,6,23,.6); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 4px 10px; }
+    .lane { width: 14px; height: 14px; border-radius: 999px; display: inline-block; vertical-align: middle; margin-right: 6px; }
+    .settings { position: absolute; top: 56px; right: 8px; width: clamp(220px, 38vw, 340px); display:none; pointer-events:auto; }
+    .settings .row { display:flex; gap:8px; align-items:center; margin:8px 0; }
+    .settings label { width:64px; color:#cbd5e1; font-size:12px; }
+    .settings input { flex:1; background:#0b1220; border:1px solid rgba(255,255,255,.15); color:#fff; border-radius:10px; padding:8px 10px; }
+    #finishFlash { position:absolute; inset:0; background: radial-gradient(ellipse at center, rgba(255,255,255,.9), rgba(255,255,255,0) 60%); opacity:0; transition: opacity .25s ease; pointer-events:none; }
+    #finishFlash.show { opacity:1; }
+    @media (max-width: 768px) {
+      .topbar .panel { display:none; }
+      .btn { padding: 12px 16px; border-radius: 12px; }
+      .hud { flex-direction: column; gap:6px; }
+    }
+  </style>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/",
+        "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@2.1.0/lib/three-vrm.module.js",
+        "gaussian-splats-3d": "../../lib/gaussian-splats-3d.module.js",
+        "jszip": "https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm",
+        "gvrm": "../../lib/gaussian-vrm.min.js"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <div id="ui">
+    <div class="topbar">
+      <div class="panel">100m Race — Models: assets/sample6–9.gvrm ・ Start: Space/Button</div>
+      <div>
+        <button id="btnStart" class="btn">Start Race</button>
+        <button id="btnReset" class="btn secondary">Reset</button>
+        <button id="btnSettings" class="btn warn">Names</button>
+      </div>
+    </div>
+    <div id="settingsPanel" class="settings panel">
+      <div class="row"><label>Lane 1</label><input id="name1" placeholder="Name 1"/></div>
+      <div class="row"><label>Lane 2</label><input id="name2" placeholder="Name 2"/></div>
+      <div class="row"><label>Lane 3</label><input id="name3" placeholder="Name 3"/></div>
+      <div class="row"><label>Lane 4</label><input id="name4" placeholder="Name 4"/></div>
+      <div class="row" style="justify-content:flex-end"><button id="btnSaveNames" class="btn">Save</button></div>
+    </div>
+    <div class="overlay-center">
+      <div id="countdown" class="countdown"></div>
+    </div>
+    <div class="hud">
+      <div id="raceTimer" class="panel">Time: 0.00s</div>
+      <div id="scores" class="panel scoreboard"></div>
+    </div>
+    <div id="finishFlash"></div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
